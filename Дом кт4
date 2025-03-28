@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Custom Slider</title>
+    <style>
+        .slider {
+            width: 300px;
+            height: 20px;
+            background-color: #460404;
+            position: relative;
+            border-radius: 10px;
+            margin: 20px auto;
+
+        }
+
+        .thumb {
+            width: 20px;
+            height: 20px;
+            background-color: #f8f4f4;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="slider" class="slider">
+        <div class="thumb"></div>
+    </div>
+
+    Slide <span id="slide">&nbsp;</span>
+    Change: <span id="change">&nbsp;</span>
+
+    <button onclick="slider.setValue(100)">Set Value to 100</button>
+
+
+    <script>
+        function Slider(options) {
+            this.elem = options.elem;
+            this.max = options.max;
+            this.thumb = this.elem.querySelector('.thumb');
+
+            const that = this; 
+
+
+            this.thumb.addEventListener('mousedown', function (e) {
+                const thumb = this;
+                const sliderRect = that.elem.getBoundingClientRect();
+
+
+                function moveAt(clientX) {
+                    let newLeft = clientX - sliderRect.left - thumb.offsetWidth / 2;
+                 
+                    newLeft = Math.max(0, newLeft);
+                    newLeft = Math.min(sliderRect.width - thumb.offsetWidth, newLeft);
+                    thumb.style.left = newLeft + 'px';
+
+
+                    const slideValue = Math.round((newLeft / (sliderRect.width - thumb.offsetWidth)) * that.max);
+                    const slideEvent = new CustomEvent('slide', {
+                        bubbles: true, 
+                        detail: slideValue
+                    });
+                    that.elem.dispatchEvent(slideEvent);
+                }
+
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+
+
+                moveAt(e.clientX);
+
+
+                function onMouseMove(e) {
+                    moveAt(e.clientX);
+                }
+
+
+                function onMouseUp() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+
+                   
+                    const changeEvent = new CustomEvent('change', {
+                        bubbles: true,
+                        detail: parseInt(document.getElementById('slide').textContent, 10) || 0
+                    });
+
+                    that.elem.dispatchEvent(changeEvent);
+                }
+
+
+                e.preventDefault(); 
+            });
+
+
+
+            this.setValue = function (value) {
+                const percentage = (value / this.max) * 100;
+                this.thumb.style.left = percentage + '%';
+
+         
+                const slideEvent = new CustomEvent('slide', { bubbles: true, detail: value });
+                that.elem.dispatchEvent(slideEvent);
+
+                const changeEvent = new CustomEvent('change', { bubbles: true, detail: value });
+                that.elem.dispatchEvent(changeEvent);
+
+                document.getElementById('slide').textContent = value; 
+                document.getElementById('change').textContent = value; 
+            };
+
+        }
+
+
+
+        var sliderElem = document.getElementById('slider');
+        var slider = new Slider({
+            elem: sliderElem,
+            max: 100
+        });
+
+
+
+        sliderElem.addEventListener('slide', function (event) {
+            document.getElementById('slide').innerHTML = event.detail;
+        });
+
+        sliderElem.addEventListener('change', function (event) {
+            document.getElementById('change').innerHTML = event.detail;
+        });
+    </script>
+
+</body>
+
+</html>
