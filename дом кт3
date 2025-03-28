@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог товаров</title>
+    <style>
+        .menu {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu ul {
+            list-style-type: none;
+            padding-left: 20px;
+            display: none;
+        }
+
+        .menu ul.open {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="menu">
+        <li>Книги
+            <ul>
+                <li>Зарубежные
+                    <ul>
+                        <li><a href="#">Детекстив</a></li>
+                        <li><a href="#">Научная фантастика</a></li>
+                        <li><a href="#">Исторические</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Отечественные</a>
+                    <ul>
+                        <li><a href="#">Детекстив</a></li>
+                        <li><a href="#">Научная фантастика</a></li>
+                        <li><a href="#">Исторические</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>DVD
+            <ul>
+                <li>Отечественные
+                    <ul>
+                        <li><a href="#">Детекстив</a></li>
+                        <li><a href="#">Научная фантастика</a></li>
+                        <li><a href="#">Исторические</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Зарубежные</a>
+                    <ul>
+                        <li><a href="#">Детекстив</a></li>
+                        <li><a href="#">Научная фантастика</a></li>
+                        <li><a href="#">Исторические</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+
+
+
+
+
+    </ul>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const menu = document.querySelector(".menu");
+
+
+            menu.addEventListener("click", (event) => {
+
+                const listItem = event.target.closest("li");
+
+
+                if (!listItem) return;
+
+
+                const subMenu = listItem.querySelector("ul");
+
+                if (subMenu) {
+
+                    subMenu.classList.toggle("open");
+                } else {
+
+                    alert("Вы можете перейти по ссылке!");
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
